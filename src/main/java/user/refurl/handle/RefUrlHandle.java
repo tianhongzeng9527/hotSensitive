@@ -23,10 +23,11 @@ import java.util.Map;
 public class RefUrlHandle {
     private List<String> selectWord;
     private List<String> sensitiveWord;
+    private String selectQuery;
     private static Logger logger = Logger.getLogger(RefUrlHandle.class);
     private String url;
 
-    public RefUrlHandle(String url){
+    public RefUrlHandle(String url) {
         this.url = url;
         selectWord = new ArrayList<>();
         sensitiveWord = new ArrayList<>();
@@ -39,14 +40,27 @@ public class RefUrlHandle {
 
     private void generateSelectWord() throws Exception {
         AnalysisKeyword analysisKeyword = new AnalysisKeyword();
-        String content = analysisKeyword.exec(url);
-        selectWord = toWords(content,  new ComplexAnalyzer());
+        selectQuery = analysisKeyword.exec(url);
+        if ((selectQuery.indexOf(Constants.HTTP) == 0) || (selectQuery.indexOf(Constants.HTTPS) == 0))
+            selectQuery = "";
+        selectWord = toWords(selectQuery, new ComplexAnalyzer());
+    }
+
+    public String getSelectQuery() {
+        return selectQuery;
     }
 
     private void generateSensitiveWord() throws IOException, InterruptedException {
-        for(int i = 0; i < selectWord.size(); i++){
-            for(Map.Entry<String, String> map: SensitiveWord.sensitiveWordCorrespondId.entrySet()){
-                if(similarScore(selectWord.get(i),map.getKey()) > Constants.SIMILAR_SCORE_LINE){
+        for (Map.Entry<String, String> map : SensitiveWord.sensitiveWordCorrespondId.entrySet()) {
+            if (selectQuery.contains(map.getKey())) {
+                sensitiveWord.add(map.getValue());
+            }
+        }
+        if (sensitiveWord.size() > 0)
+            return;
+        for (int i = 0; i < selectWord.size(); i++) {
+            for (Map.Entry<String, String> map : SensitiveWord.sensitiveWordCorrespondId.entrySet()) {
+                if (similarScore(selectWord.get(i), map.getKey()) > Constants.SIMILAR_SCORE_LINE) {
                     sensitiveWord.add(map.getValue());
                 }
             }
@@ -81,7 +95,7 @@ public class RefUrlHandle {
         return selectWord;
     }
 
-    public List<String> getSensitiveWord(){
+    public List<String> getSensitiveWord() {
         return sensitiveWord;
     }
 
@@ -103,5 +117,8 @@ public class RefUrlHandle {
         sensitiveWord1.init();
         RefUrlHandle refUrlHandle = new RefUrlHandle("https://www.baidu.com/s?wd=%E5%A6%82%E4%BD%95%E5%BC%BA%E5%A5%B8&rsv_spt=1&rsv_iqid=0xf2f1eca000006b18&issp=1&f=3&rsv_bp=1&rsv_idx=2&ie=utf-8&tn=baiduhome_pg&rsv_enter=0&rsv_t=f18bzUmGnb6KsjEl%2FIjENnZ7SEjLI4V1RAwFFtCD4e2503iS3GrqgnocPNiHORrB1TpA&oq=%E5%A6%82%E4%BD%95%E5%BC%BA%E5%A5%B8&rsv_pq=b0890ba600009126&prefixsug=%E5%A6%82%E4%BD%95%E5%BC%BA%E5%A5%B8&rsp=1");
         refUrlHandle.init();
+        for (String s : refUrlHandle.sensitiveWord) {
+            System.out.println(s);
+        }
     }
 }

@@ -51,7 +51,7 @@ public class Main {
         }
 
         private void handlerRightTimeInformation(UserInformation userInformation, String line, OutputCollector<Text, IntWritable> output) throws IOException {
-            if (userInformation.isRightTime()) {
+            if (userInformation.isRightTimeAndSelectUrl()) {
                 if (!userInformation.isNormalMessage) {
                     output.collect(new Text(Constants.WRONG_FORMAT + line), zero);
                     return;
@@ -112,7 +112,12 @@ public class Main {
                 throws IOException {
             String[] splits = key.toString().trim().split(Constants.SEPARATOR);
             if (splits.length == Constants.HOT_WORD_LENGTH){
-                output.collect(key, new IntWritable(1));
+                int sum = 0;
+                while (values.hasNext()) {
+                    sum += values.next().get();
+                    logger.info(key.toString());
+                }
+                output.collect(key, new IntWritable(sum));
             }
             else if(splits.length == Constants.SENSITIVE_WORD_LENGTH){
                 while (values.hasNext()) {

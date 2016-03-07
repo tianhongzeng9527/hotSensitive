@@ -1,21 +1,12 @@
 package user.refurl.handle;
 
-import info.zznet.udf.keywordreport.AnalysisKeyword;
 import tools.Constants;
 import tools.SensitiveWord;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by tian on 16-3-3.
@@ -33,31 +24,33 @@ public class UserInformation {
     private boolean isRightTime;
     private RefUrlHandle refUrlHandle;
     private List<String> selectWord;
+    private String selectQuery;
 
     public UserInformation(String userDataInformation) throws Exception {
         String[] splits = userDataInformation.trim().split(Constants.DECOLLATOR_FOR_HDFS_MESSAGE);
         isRightTime = true;
         isNormalMessage = true;
         initUserInformation(splits);
-        if (isRightTime()) {
+        if (isRightTimeAndSelectUrl()) {
             refUrlHandle = new RefUrlHandle(referURL);
             refUrlHandle.init();
             selectWord = refUrlHandle.getSelectWord();
             sensitiveId = refUrlHandle.getSensitiveWord();
+            selectQuery = refUrlHandle.getSelectQuery();
         }
     }
 
-    public List<String> getSensitiveId(){
+    public List<String> getSensitiveId() {
         return sensitiveId;
     }
 
-    public List<String> getSelectWord(){
+    public List<String> getSelectWord() {
         return selectWord;
     }
 
 
-    public boolean isRightTime() {
-        return isRightTime;
+    public boolean isRightTimeAndSelectUrl() {
+        return isRightTime && (!isSelectUrl());
     }
 
     private void initUserInformation(String[] splits) throws ParseException {
@@ -81,12 +74,16 @@ public class UserInformation {
         }
     }
 
-    public String getWhoWhenUrl(){
-        return uid+Constants.SEPARATOR+uname+Constants.SEPARATOR+reqURL+Constants.SEPARATOR;
+    private boolean isSelectUrl() {
+        return referURL.contains(Constants.WE_CHAT_URL);
     }
 
-    public String getWhoWhen(){
-        return uid+Constants.SEPARATOR+uname+Constants.SEPARATOR;
+    public String getWhoWhenUrl() {
+        return uid + Constants.SEPARATOR + reqTime + Constants.SEPARATOR + reqURL + Constants.SEPARATOR + selectQuery + Constants.SEPARATOR;
+    }
+
+    public String getWhoWhen() {
+        return uid + Constants.SEPARATOR + reqTime + Constants.SEPARATOR + selectQuery + Constants.SEPARATOR;
     }
 
     public static void main(String[] args) throws Exception {
