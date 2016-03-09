@@ -28,4 +28,10 @@ public class Constants {
     public final static String WE_CHAT_URL = "mp.weixin.qq.com";
     public final static String HTTP = "http://";
     public final static String HTTPS = "https://";
+    public final static int MIN_REF_URL_LENGTH = 1;
+    public final static int DATA_INDEX = 0;
+    public final static int DATA_BEGIN_INDEX = 0;
+    public final static int DATA_END_INDEX = 8;
+    public final static int DATA_HOUR_BEGIN_INDEX = 8;
+    public final static int DATA_HOUR_END_INDEX = 10;
 }

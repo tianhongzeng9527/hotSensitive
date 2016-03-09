@@ -51,7 +51,7 @@ public class Main {
         }
 
         private void handlerRightTimeInformation(UserInformation userInformation, String line, OutputCollector<Text, IntWritable> output) throws IOException {
-            if (userInformation.isRightTimeAndSelectUrl()) {
+            if (userInformation.isRightQueryAndSelectUrl()) {
                 if (!userInformation.isNormalMessage) {
                     output.collect(new Text(Constants.WRONG_FORMAT + line), zero);
                     return;
