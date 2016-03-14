@@ -43,7 +43,6 @@ public class Main {
             time = job.get(TIME_STRING);
             Constants.TIME = time;
             Constants.WORDS_DISTANCE_URL = "http://" + job.get(CALCULATE_WORD_DISTANCE_URL_STRING) + "/zz_nlp/wordsDistance?word1=%s&word2=%s";
-//            category_get_url = job.get(CATEGORY_GET_URL);
             sensitiveWord_get_url = "http://" + job.get(SENSITIVE_WORD_GET_URL) + "/public_behavior/api/sensitive.do";
 //            Constants.WORDS_DISTANCE_URL = "http://192.168.1.106:8080/zz_nlp/wordsDistance?word1=%s&word2=%s";
 //            category_get_url = "http://192.168.1.106:8080/public_behavior/api/behavior.do";
@@ -137,7 +136,6 @@ public class Main {
         conf.setCombinerClass(Reduce.class);
         conf.setReducerClass(Reduce.class);
         conf.setInputFormat(CombineTextInputFormat.class);
-//        conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(MyMultipleOutputFormat.class);
         conf.set("mapred.textoutputformat.separator", Constants.SEPARATOR);
         conf.set("mapreduce.input.fileinputformat.input.dir.recursive", String.valueOf(true));
@@ -157,7 +155,6 @@ public class Main {
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
         conf.set(TIME_STRING, s);
         conf.set(CALCULATE_WORD_DISTANCE_URL_STRING, args[2]);
-//        conf.set(CATEGORY_GET_URL, args[3]);
         conf.set(SENSITIVE_WORD_GET_URL, args[3]);
         JobClient.runJob(conf);
     }
