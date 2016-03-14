@@ -73,8 +73,8 @@ public class UserInformation {
             if (length > 11)
                 uname = splits[11];
         if (length <= 10) {
-            uid = "110";
-            uname = "uname";
+            uid = "0";
+            uname = "0";
         }
     }
 

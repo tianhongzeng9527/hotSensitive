@@ -42,12 +42,12 @@ public class Main {
         public void configure(JobConf job) {
             time = job.get(TIME_STRING);
             Constants.TIME = time;
-//            calculate_word_distance_url = job.get(CALCULATE_WORD_DISTANCE_URL_STRING);
+            Constants.WORDS_DISTANCE_URL = "http://" + job.get(CALCULATE_WORD_DISTANCE_URL_STRING) + "/zz_nlp/wordsDistance?word1=%s&word2=%s";
 //            category_get_url = job.get(CATEGORY_GET_URL);
-//            sensitiveWord_get_url = job.get(SENSITIVE_WORD_GET_URL);
-            Constants.WORDS_DISTANCE_URL = "http://192.168.1.106:8080/zz_nlp/wordsDistance?word1=%s&word2=%s";
-            category_get_url = "http://192.168.1.106:8080/public_behavior/api/behavior.do";
-            sensitiveWord_get_url = "http://192.168.1.106:8080/public_behavior/api/sensitive.do";
+            sensitiveWord_get_url = "http://" + job.get(SENSITIVE_WORD_GET_URL) + "/public_behavior/api/sensitive.do";
+//            Constants.WORDS_DISTANCE_URL = "http://192.168.1.106:8080/zz_nlp/wordsDistance?word1=%s&word2=%s";
+//            category_get_url = "http://192.168.1.106:8080/public_behavior/api/behavior.do";
+//            sensitiveWord_get_url = "http://192.168.1.106:8080/public_behavior/api/sensitive.do";
         }
 
         private void handlerRightTimeInformation(UserInformation userInformation, String line, OutputCollector<Text, IntWritable> output) throws IOException {
@@ -59,13 +59,13 @@ public class Main {
                     List<String> sensitiveId = userInformation.getSensitiveId();
                     if (sensitiveId != null && sensitiveId.size() > 0) {
                         for (String s : sensitiveId) {
-                            output.collect(new Text(userInformation.getWhoWhenUrl()+s), new IntWritable(1));
+                            output.collect(new Text(userInformation.getWhoWhenUrl() + s), new IntWritable(1));
                         }
                     }
                     List<String> hotWord = userInformation.getSelectWord();
                     if (hotWord != null && hotWord.size() > 0) {
                         for (String s : hotWord) {
-                            output.collect(new Text(userInformation.getWhoWhen()+s), new IntWritable(1));
+                            output.collect(new Text(userInformation.getWhoWhen() + s), new IntWritable(1));
                         }
                     }
                 }
@@ -111,15 +111,14 @@ public class Main {
                            OutputCollector<Text, IntWritable> output, Reporter reporter)
                 throws IOException {
             String[] splits = key.toString().trim().split(Constants.SEPARATOR);
-            if (splits.length == Constants.HOT_WORD_LENGTH){
+            if (splits.length == Constants.HOT_WORD_LENGTH) {
                 int sum = 0;
                 while (values.hasNext()) {
                     sum += values.next().get();
                     logger.info(key.toString());
                 }
                 output.collect(key, new IntWritable(sum));
-            }
-            else if(splits.length == Constants.SENSITIVE_WORD_LENGTH){
+            } else if (splits.length == Constants.SENSITIVE_WORD_LENGTH) {
                 while (values.hasNext()) {
                     output.collect(key, values.next());
                 }
@@ -157,9 +156,9 @@ public class Main {
         String s = df.format(dt);
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
         conf.set(TIME_STRING, s);
-//        conf.set(CALCULATE_WORD_DISTANCE_URL_STRING, args[2]);
+        conf.set(CALCULATE_WORD_DISTANCE_URL_STRING, args[2]);
 //        conf.set(CATEGORY_GET_URL, args[3]);
-//        conf.set(SENSITIVE_WORD_GET_URL, args[4]);
+        conf.set(SENSITIVE_WORD_GET_URL, args[3]);
         JobClient.runJob(conf);
     }
 }
