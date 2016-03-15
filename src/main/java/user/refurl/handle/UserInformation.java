@@ -83,11 +83,11 @@ public class UserInformation {
     }
 
     public String getWhoWhenUrl() {
-        return uid + Constants.SEPARATOR + reqTime + Constants.SEPARATOR + reqURL + Constants.SEPARATOR + selectQuery + Constants.SEPARATOR;
+        return uid + Constants.SEPARATOR + reqTime + Constants.SEPARATOR + reqURL + Constants.SEPARATOR + selectQuery.trim() + Constants.SEPARATOR;
     }
 
     public String getWhoWhen() {
-        return uid + Constants.SEPARATOR + reqTime + Constants.SEPARATOR + selectQuery + Constants.SEPARATOR;
+        return uid + Constants.SEPARATOR + reqTime + Constants.SEPARATOR + selectQuery.trim() + Constants.SEPARATOR;
     }
 
     public static void main(String[] args) throws Exception {
