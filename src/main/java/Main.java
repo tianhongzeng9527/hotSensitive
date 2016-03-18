@@ -43,7 +43,7 @@ public class Main {
             time = job.get(TIME_STRING);
             Constants.TIME = time;
             Constants.WORDS_DISTANCE_URL = "http://" + job.get(CALCULATE_WORD_DISTANCE_URL_STRING) + "/zz_nlp/wordsDistance?word1=%s&word2=%s";
-            sensitiveWord_get_url = "http://" + job.get(SENSITIVE_WORD_GET_URL) + "/public_behavior/api/sensitive.do";
+            sensitiveWord_get_url = "http://" + job.get(SENSITIVE_WORD_GET_URL) + "/zimo/api/sensitiveWords.do";
 //            Constants.WORDS_DISTANCE_URL = "http://192.168.1.106:8080/zz_nlp/wordsDistance?word1=%s&word2=%s";
 //            category_get_url = "http://192.168.1.106:8080/public_behavior/api/behavior.do";
 //            sensitiveWord_get_url = "http://192.168.1.106:8080/public_behavior/api/sensitive.do";
