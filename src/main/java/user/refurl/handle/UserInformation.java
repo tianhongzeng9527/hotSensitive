@@ -72,7 +72,7 @@ public class UserInformation {
         if (length > 11)
             if (length > 11)
                 uname = splits[11];
-        if (length <= 10) {
+        if (uid.equals("")) {
             uid = "0";
             uname = "0";
         }
